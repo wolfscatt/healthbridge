@@ -99,23 +99,31 @@ const PatientTabs = () => {
         },
       })}
     >
-      <PatientTab.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
+      <PatientTab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: 'Ana Sayfa' }}
+      />
       <PatientTab.Screen
         name="Diseases"
         component={DiseasesScreen}
-        options={{ title: 'Diseases' }}
+        options={{ title: 'Hastalıklar' }}
       />
       <PatientTab.Screen
         name="SymptomChecker"
         component={SymptomCheckerScreen}
-        options={{ title: 'Symptom Check' }}
+        options={{ title: 'Semptom Kontrol' }}
       />
       <PatientTab.Screen
         name="FindDoctor"
         component={FindDoctorScreen}
-        options={{ title: 'Find Doctor' }}
+        options={{ title: 'Uzman Bul' }}
       />
-      <PatientTab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+      <PatientTab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ title: 'Profil' }}
+      />
     </PatientTab.Navigator>
   );
 };
@@ -148,27 +156,27 @@ const DoctorTabs = () => {
       <DoctorTab.Screen
         name="Consultations"
         component={DoctorDashboardScreen}
-        options={{ title: 'Consultations' }}
+        options={{ title: 'Görüşmeler' }}
       />
       <DoctorTab.Screen
         name="DoctorAppointments"
         component={DoctorAppointmentsTabScreen}
-        options={{ title: 'Appointments' }}
+        options={{ title: 'Randevular' }}
       />
       <DoctorTab.Screen
         name="Calendar"
         component={DoctorCalendarScreen}
-        options={{ title: 'Calendar' }}
+        options={{ title: 'Takvim' }}
       />
       <DoctorTab.Screen
         name="Earnings"
         component={DoctorEarningsScreen}
-        options={{ title: 'Earnings' }}
+        options={{ title: 'Kazançlar' }}
       />
       <DoctorTab.Screen
         name="DoctorProfile"
         component={ProfileScreen}
-        options={{ title: 'Profile' }}
+        options={{ title: 'Profil' }}
       />
     </DoctorTab.Navigator>
   );

@@ -6,14 +6,15 @@ export const AdminInfoScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>Admin Web Dashboard</Text>
+        <Text style={styles.title}>Admin Yönetim Paneli</Text>
         <Text style={styles.text}>
           Admin yetkileri; doktor doğrulama, kullanıcı yönetimi, şikayet yönetimi, komisyon
           ayarları ve içerik yönetimi gibi gelişmiş operasyonları içerir.
         </Text>
         <Text style={styles.text}>
           Bu MVP mobil uygulama yalnızca hasta ve doktor rollerine odaklanır. Admin rolü için ayrı
-          bir **web dashboard** tasarlanmalıdır (örneğin React + Next.js + admin template).
+          bir web yönetim paneli tasarlanmalıdır (örneğin React ve Next.js ile geliştirilen bir
+          admin arayüzü).
         </Text>
         <Text style={styles.text}>
           Demo amaçlı olarak, mobil uygulamada yalnızca bu bilgilendirme ekranı gösterilmektedir.
