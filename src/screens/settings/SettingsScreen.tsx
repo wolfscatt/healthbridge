@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppContext } from '../../context/AppContext';
+import { RootStackParamList } from '../../navigation/AppNavigation';
+
+type NavProp = NativeStackNavigationProp<RootStackParamList, 'Settings'>;
 
 export const SettingsScreen: React.FC = () => {
   const { currentUser, setCurrentUser } = useAppContext();
+  const navigation = useNavigation<NavProp>();
   const [kvkkApproved, setKvkkApproved] = useState(false);
 
   const handleLogout = () => {
     setCurrentUser(null);
+    // Splash ekranı rol durumuna göre Auth'a yönlendirir.
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Splash' }],
+    });
   };
 
   const handleDelete = () => {
@@ -19,7 +30,13 @@ export const SettingsScreen: React.FC = () => {
         {
           text: 'Sil',
           style: 'destructive',
-          onPress: () => setCurrentUser(null),
+          onPress: () => {
+            setCurrentUser(null);
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Splash' }],
+            });
+          },
         },
       ]
     );

@@ -23,7 +23,8 @@ export const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       verified: role === 'doctor' ? false : true,
     };
     setCurrentUser(user);
-    navigation.getParent()?.navigate('MainTabs' as never);
+    // Kayıt sonrası Splash'a dön; Splash rolü okuyup ilgili stack'i açar.
+    navigation.getParent()?.navigate('Splash' as never);
   };
 
   return (

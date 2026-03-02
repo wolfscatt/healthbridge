@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../context/AppContext';
+import { colors } from '../theme/theme';
 import { SplashScreen } from '../screens/SplashScreen';
 import { LoginScreen } from '../screens/auth/LoginScreen';
 import { RegisterScreen } from '../screens/auth/RegisterScreen';
@@ -20,11 +21,18 @@ import { ProfileScreen } from '../screens/profile/ProfileScreen';
 import { DoctorVerificationScreen } from '../screens/profile/DoctorVerificationScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { AdminDoctorsScreen } from '../screens/admin/AdminDoctorsScreen';
+import { DoctorDashboardScreen } from '../screens/doctor/DoctorDashboardScreen';
+import { DoctorCalendarScreen } from '../screens/doctor/DoctorCalendarScreen';
+import { DoctorEarningsScreen } from '../screens/doctor/DoctorEarningsScreen';
+import { DoctorAppointmentsTabScreen } from '../screens/doctor/DoctorAppointmentsTabScreen';
+import { AdminInfoScreen } from '../screens/admin/AdminInfoScreen';
 
 export type RootStackParamList = {
   Splash: undefined;
   Auth: undefined;
-  MainTabs: undefined;
+  PatientTabs: undefined;
+  DoctorTabs: undefined;
+  AdminInfo: undefined;
   DiseaseDetail: { diseaseId: string };
   SymptomResult: { riskLevel: string };
   DoctorProfile: { doctorId: string };
@@ -38,7 +46,7 @@ export type AuthStackParamList = {
   Register: undefined;
 };
 
-export type MainTabParamList = {
+export type PatientTabParamList = {
   Home: undefined;
   Diseases: undefined;
   SymptomChecker: undefined;
@@ -46,9 +54,18 @@ export type MainTabParamList = {
   Profile: undefined;
 };
 
+export type DoctorTabParamList = {
+  Consultations: undefined;
+  DoctorAppointments: undefined;
+  Calendar: undefined;
+  Earnings: undefined;
+  DoctorProfile: undefined;
+};
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
-const Tab = createBottomTabNavigator<MainTabParamList>();
+const PatientTab = createBottomTabNavigator<PatientTabParamList>();
+const DoctorTab = createBottomTabNavigator<DoctorTabParamList>();
 
 const AuthNavigator = () => (
   <AuthStack.Navigator screenOptions={{ headerShown: false }}>
@@ -57,18 +74,24 @@ const AuthNavigator = () => (
   </AuthStack.Navigator>
 );
 
-const MainTabs = () => {
+const PatientTabs = () => {
   return (
-    <Tab.Navigator
+    <PatientTab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: '#00bfa5',
-        tabBarInactiveTintColor: '#9e9e9e',
-        tabBarStyle: { paddingBottom: 6, height: 64 },
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textMuted,
+        tabBarStyle: {
+          paddingBottom: 6,
+          height: 68,
+          borderTopWidth: 0,
+          backgroundColor: colors.card,
+          elevation: 8,
+        },
         tabBarIcon: ({ color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap = 'home';
           if (route.name === 'Home') iconName = 'home';
-          if (route.name === 'Diseases') iconName = 'medical';
+          if (route.name === 'Diseases') iconName = 'medkit';
           if (route.name === 'SymptomChecker') iconName = 'pulse';
           if (route.name === 'FindDoctor') iconName = 'people';
           if (route.name === 'Profile') iconName = 'person';
@@ -76,20 +99,78 @@ const MainTabs = () => {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Ana Sayfa' }} />
-      <Tab.Screen name="Diseases" component={DiseasesScreen} options={{ title: 'Hastalıklar' }} />
-      <Tab.Screen
+      <PatientTab.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
+      <PatientTab.Screen
+        name="Diseases"
+        component={DiseasesScreen}
+        options={{ title: 'Diseases' }}
+      />
+      <PatientTab.Screen
         name="SymptomChecker"
         component={SymptomCheckerScreen}
-        options={{ title: 'Semptom Kontrol' }}
+        options={{ title: 'Symptom Check' }}
       />
-      <Tab.Screen
+      <PatientTab.Screen
         name="FindDoctor"
         component={FindDoctorScreen}
-        options={{ title: 'Uzman Bul' }}
+        options={{ title: 'Find Doctor' }}
       />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profil' }} />
-    </Tab.Navigator>
+      <PatientTab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+    </PatientTab.Navigator>
+  );
+};
+
+const DoctorTabs = () => {
+  return (
+    <DoctorTab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textMuted,
+        tabBarStyle: {
+          paddingBottom: 6,
+          height: 68,
+          borderTopWidth: 0,
+          backgroundColor: colors.card,
+          elevation: 8,
+        },
+        tabBarIcon: ({ color, size }) => {
+          let iconName: keyof typeof Ionicons.glyphMap = 'speedometer';
+          if (route.name === 'Consultations') iconName = 'chatbubbles';
+          if (route.name === 'DoctorAppointments') iconName = 'calendar';
+          if (route.name === 'Calendar') iconName = 'calendar-clear';
+          if (route.name === 'Earnings') iconName = 'wallet';
+          if (route.name === 'DoctorProfile') iconName = 'person-circle';
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+    >
+      <DoctorTab.Screen
+        name="Consultations"
+        component={DoctorDashboardScreen}
+        options={{ title: 'Consultations' }}
+      />
+      <DoctorTab.Screen
+        name="DoctorAppointments"
+        component={DoctorAppointmentsTabScreen}
+        options={{ title: 'Appointments' }}
+      />
+      <DoctorTab.Screen
+        name="Calendar"
+        component={DoctorCalendarScreen}
+        options={{ title: 'Calendar' }}
+      />
+      <DoctorTab.Screen
+        name="Earnings"
+        component={DoctorEarningsScreen}
+        options={{ title: 'Earnings' }}
+      />
+      <DoctorTab.Screen
+        name="DoctorProfile"
+        component={ProfileScreen}
+        options={{ title: 'Profile' }}
+      />
+    </DoctorTab.Navigator>
   );
 };
 
@@ -97,12 +178,21 @@ export const AppNavigation: React.FC = () => {
   const { currentUser } = useAppContext();
 
   const isAuthenticated = !!currentUser;
+  const role = currentUser?.role;
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Splash" component={SplashScreen} />
       {!isAuthenticated && <Stack.Screen name="Auth" component={AuthNavigator} />}
-      {isAuthenticated && <Stack.Screen name="MainTabs" component={MainTabs} />}
+      {isAuthenticated && role === 'patient' && (
+        <Stack.Screen name="PatientTabs" component={PatientTabs} />
+      )}
+      {isAuthenticated && role === 'doctor' && (
+        <Stack.Screen name="DoctorTabs" component={DoctorTabs} />
+      )}
+      {isAuthenticated && role === 'admin' && (
+        <Stack.Screen name="AdminInfo" component={AdminInfoScreen} />
+      )}
       <Stack.Screen name="DiseaseDetail" component={DiseaseDetailScreen} />
       <Stack.Screen name="SymptomResult" component={SymptomResultScreen} />
       <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />

@@ -51,7 +51,7 @@ export const SymptomResultScreen: React.FC<Props> = ({ route, navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.secondaryButton}
-        onPress={() => navigation.navigate('MainTabs', { screen: 'FindDoctor' } as never)}
+        onPress={() => navigation.navigate('PatientTabs', { screen: 'FindDoctor' } as never)}
       >
         <Text style={styles.secondaryButtonText}>Bir Uzmanla Görüş</Text>
       </TouchableOpacity>

@@ -11,10 +11,17 @@ export const SplashScreen: React.FC<Props> = ({ navigation }) => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (currentUser) {
-        navigation.replace('MainTabs');
-      } else {
+      if (!currentUser) {
         navigation.replace('Auth');
+        return;
+      }
+
+      if (currentUser.role === 'patient') {
+        navigation.replace('PatientTabs');
+      } else if (currentUser.role === 'doctor') {
+        navigation.replace('DoctorTabs');
+      } else {
+        navigation.replace('AdminInfo');
       }
     }, 1200);
     return () => clearTimeout(timeout);

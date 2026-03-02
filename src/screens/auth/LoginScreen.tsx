@@ -23,7 +23,8 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
       verified: true,
     };
     setCurrentUser(mockUser);
-    navigation.getParent()?.navigate('MainTabs' as never);
+    // Root navigator Splash ekranına döner, Splash rolü kontrol edip doğru stack'i açar.
+    navigation.getParent()?.navigate('Splash' as never);
   };
 
   return (

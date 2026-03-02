@@ -1,215 +1,263 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/AppNavigation';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { PatientTabParamList } from '../navigation/AppNavigation';
 import { useAppContext } from '../context/AppContext';
+import { colors, radii, spacing } from '../theme/theme';
 
-type NavProp = NativeStackNavigationProp<RootStackParamList>;
+type NavProp = BottomTabNavigationProp<PatientTabParamList, 'Home'>;
 
 export const HomeScreen: React.FC = () => {
   const navigation = useNavigation<NavProp>();
   const { currentUser } = useAppContext();
 
-  const isDoctor = currentUser?.role === 'doctor';
-  const isAdmin = currentUser?.role === 'admin';
-
   const tiles = [
     {
       key: 'diseases',
       title: 'Hastalıklar',
-      desc: 'Güvenilir sağlık içerikleri',
-      onPress: () => navigation.navigate('MainTabs', { screen: 'Diseases' } as never),
+      icon: 'medkit-outline' as const,
+      onPress: () => navigation.navigate('Diseases'),
     },
     {
       key: 'symptom',
       title: 'Semptom Kontrol',
-      desc: 'Risk değerlendirme (teşhis değil)',
-      onPress: () => navigation.navigate('MainTabs', { screen: 'SymptomChecker' } as never),
+      icon: 'pulse-outline' as const,
+      onPress: () => navigation.navigate('SymptomChecker'),
     },
     {
       key: 'findDoctor',
       title: 'Uzman Bul',
-      desc: 'Doğrulanmış uzman listeleri',
-      onPress: () => navigation.navigate('MainTabs', { screen: 'FindDoctor' } as never),
+      icon: 'people-outline' as const,
+      onPress: () => navigation.navigate('FindDoctor'),
     },
     {
       key: 'messages',
       title: 'Mesajlar',
-      desc: 'Uzmanlarla yazışmalarınız',
+      icon: 'chatbubbles-outline' as const,
       onPress: () => navigation.navigate('Chat', { chatId: 'demo' }),
     },
     {
       key: 'appointments',
       title: 'Randevular',
-      desc: 'Yaklaşan randevularınızı görün',
+      icon: 'calendar-outline' as const,
       onPress: () => navigation.navigate('Appointment', { doctorId: 'doc1' }),
     },
     {
       key: 'settings',
       title: 'Ayarlar & KVKK',
-      desc: 'Gizlilik ve hesap yönetimi',
+      icon: 'shield-checkmark-outline' as const,
       onPress: () => navigation.navigate('Settings'),
     },
   ];
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.greeting}>
-        Merhaba{currentUser ? `, ${currentUser.name}` : ''} 👋
-      </Text>
-      <Text style={styles.subtitle}>Sağlığınız için güvenilir bir başlangıç yapın.</Text>
+    <View style={styles.container}>
+      <LinearGradient
+        colors={[colors.primary, colors.primaryDark]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
+        <View style={styles.headerTopRow}>
+          <View>
+            <Text style={styles.welcomeText}>Hoş Geldiniz</Text>
+            <Text style={styles.userName}>
+              {currentUser ? currentUser.name : 'HealthBridge'}
+            </Text>
+          </View>
+          <View style={styles.badgeVerified}>
+            <Ionicons name="shield-checkmark" size={16} color="#ECFEFF" />
+            <Text style={styles.badgeText}>Doğrulanmış Doktorlar</Text>
+          </View>
+        </View>
 
-      {isDoctor && (
-        <View style={styles.banner}>
-          <Text style={styles.bannerTitle}>Uzman Paneli</Text>
-          <Text style={styles.bannerText}>
-            Profilinizi tamamlayın ve belge yükleyerek doğrulama sürecinizi başlatın.
-          </Text>
+        <View style={styles.headerBottomRow}>
+          <View style={styles.emergencyCard}>
+            <Text style={styles.emergencyLabel}>Acil Durum?</Text>
+            <Text style={styles.emergencyText}>Hayati risk için hemen 112&apos;yi arayın.</Text>
+          </View>
           <TouchableOpacity
-            style={styles.bannerButton}
-            onPress={() => navigation.navigate('DoctorVerification')}
+            style={styles.quickButton}
+            onPress={() => navigation.navigate('SymptomChecker')}
           >
-            <Text style={styles.bannerButtonText}>Belge Yükle & Durumu Gör</Text>
+            <Ionicons name="pulse" size={22} color={colors.primaryDark} />
+            <Text style={styles.quickButtonText}>Semptom Kontrol</Text>
           </TouchableOpacity>
         </View>
-      )}
+      </LinearGradient>
 
-      {isAdmin && (
-        <View style={styles.bannerAdmin}>
-          <Text style={styles.bannerTitle}>Admin Paneli</Text>
-          <Text style={styles.bannerText}>
-            Yeni uzman başvurularını inceleyin ve onay/ret verin.
-          </Text>
-          <TouchableOpacity
-            style={styles.bannerButtonLight}
-            onPress={() => navigation.navigate('AdminDoctors')}
-          >
-            <Text style={styles.bannerButtonTextDark}>Uzman Başvuruları</Text>
-          </TouchableOpacity>
+      <ScrollView
+        style={styles.contentWrapper}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.grid}>
+          {tiles.map(tile => (
+            <TouchableOpacity
+              key={tile.key}
+              style={styles.card}
+              activeOpacity={0.9}
+              onPress={tile.onPress}
+            >
+              <View style={styles.cardIconWrapper}>
+                <Ionicons name={tile.icon} size={22} color={colors.primary} />
+              </View>
+              <Text style={styles.cardTitle}>{tile.title}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
-      )}
 
-      <View style={styles.grid}>
-        {tiles.map(tile => (
-          <TouchableOpacity key={tile.key} style={styles.card} onPress={tile.onPress}>
-            <Text style={styles.cardTitle}>{tile.title}</Text>
-            <Text style={styles.cardDesc}>{tile.desc}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <View style={styles.disclaimerBox}>
-        <Text style={styles.disclaimerTitle}>Önemli Bilgilendirme</Text>
-        <Text style={styles.disclaimerText}>
-          HealthBridge yalnızca semptom kontrolü ve genel bilgilendirme sunar, tıbbi tanı koymaz.
-          Acil bir durumda derhal 112&apos;yi arayın veya en yakın acil servise başvurun.
-        </Text>
-      </View>
-    </ScrollView>
+        <View style={styles.disclaimerBox}>
+          <Text style={styles.disclaimerTitle}>Tıbbi Tanı Değildir</Text>
+          <Text style={styles.disclaimerText}>
+            HealthBridge yalnızca semptom kontrolü ve genel bilgilendirme sunar, tıbbi tanı
+            koymaz. Acil bir durumda derhal 112&apos;yi arayın veya en yakın acil servise
+            başvurun.
+          </Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e0f7f5',
+    backgroundColor: colors.background,
   },
-  content: {
-    padding: 20,
-    paddingBottom: 40,
+  header: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.lg,
+    borderBottomLeftRadius: radii.xl,
+    borderBottomRightRadius: radii.xl,
   },
-  greeting: {
+  headerTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.lg,
+  },
+  welcomeText: {
+    color: '#E0F2F1',
+    fontSize: 14,
+  },
+  userName: {
+    color: '#FFFFFF',
     fontSize: 22,
     fontWeight: '700',
-    color: '#004d40',
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#00695c',
     marginTop: 4,
-    marginBottom: 16,
   },
-  banner: {
-    backgroundColor: '#00bfa5',
-    borderRadius: 20,
-    padding: 16,
-    marginBottom: 16,
+  badgeVerified: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(15,118,110,0.35)',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 6,
+    borderRadius: 999,
   },
-  bannerAdmin: {
-    backgroundColor: '#00796b',
-    borderRadius: 20,
-    padding: 16,
-    marginBottom: 16,
+  badgeText: {
+    color: '#ECFEFF',
+    fontSize: 11,
+    marginLeft: 4,
+    fontWeight: '500',
   },
-  bannerTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#ffffff',
-    marginBottom: 4,
+  headerBottomRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  bannerText: {
+  emergencyCard: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.14)',
+    borderRadius: radii.lg,
+    padding: spacing.md,
+    marginRight: spacing.sm,
+  },
+  emergencyLabel: {
+    color: '#FEE2E2',
+    fontSize: 12,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  emergencyText: {
+    color: '#FFFFFF',
     fontSize: 13,
-    color: '#e0f2f1',
-    marginBottom: 12,
   },
-  bannerButton: {
-    backgroundColor: '#004d40',
-    borderRadius: 16,
-    paddingVertical: 10,
+  quickButton: {
+    width: 120,
+    backgroundColor: '#E0F7FA',
+    borderRadius: radii.lg,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  bannerButtonLight: {
-    backgroundColor: '#e0f7f5',
-    borderRadius: 16,
-    paddingVertical: 10,
-  },
-  bannerButtonText: {
-    textAlign: 'center',
-    color: '#e0f2f1',
+  quickButtonText: {
+    marginTop: 4,
+    fontSize: 12,
     fontWeight: '600',
-  },
-  bannerButtonTextDark: {
+    color: colors.primaryDark,
     textAlign: 'center',
-    color: '#004d40',
-    fontWeight: '600',
+  },
+  contentWrapper: {
+    flex: 1,
+    marginTop: -spacing.lg,
+  },
+  content: {
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.xl,
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    marginTop: spacing.lg,
   },
   card: {
     width: '48%',
-    backgroundColor: '#ffffff',
-    borderRadius: 20,
-    padding: 16,
-    marginBottom: 12,
+    backgroundColor: colors.card,
+    borderRadius: radii.lg,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
+    marginBottom: spacing.md,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+  },
+  cardIconWrapper: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#ECFEFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.sm,
   },
   cardTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#00695c',
-    marginBottom: 6,
-  },
-  cardDesc: {
-    fontSize: 12,
-    color: '#607d8b',
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.textDark,
   },
   disclaimerBox: {
-    marginTop: 16,
-    backgroundColor: '#ffffff',
-    padding: 14,
-    borderRadius: 16,
+    marginTop: spacing.lg,
+    backgroundColor: colors.card,
+    padding: spacing.md,
+    borderRadius: radii.md,
   },
   disclaimerTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#b71c1c',
-    marginBottom: 4,
+    color: colors.danger,
+    marginBottom: spacing.xs,
   },
   disclaimerText: {
     fontSize: 12,
-    color: '#37474f',
+    color: colors.textMuted,
   },
 });
 
