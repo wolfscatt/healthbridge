@@ -2,6 +2,8 @@
 
 Türkçe mobil sağlık bilgilendirme ve uzman danışmanlık uygulaması prototipi.  
 Amaç; **hastalık bilgilendirme, semptom kontrol (triage), uzman listeleme ve basit mesajlaşma/randevu** akışlarını bir arada göstermek.
+**Uygulama indirme linki:** https://expo.dev/accounts/velmora/projects/healthbridge/builds/9ad8b8f2-8ef9-4f9f-9b9a-66fe1c24752e
+**Video Linki:** https://youtube.com/shorts/mEowPiEsJeA?feature=share
 
 > **Önemli:** HealthBridge **tıbbi tanı koymaz**. Sadece semptomlara dayalı **risk değerlendirmesi ve bilgilendirme** sunar.  
 > Acil durumda her zaman **112** aranmalı veya en yakın acil servise başvurulmalıdır.
